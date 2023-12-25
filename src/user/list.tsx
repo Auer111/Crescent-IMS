@@ -1,4 +1,3 @@
-// in src/users.tsx
 import { useMediaQuery, Theme } from "@mui/material";
 import { List, SimpleList, Datagrid, TextField, EmailField } from "react-admin";
 

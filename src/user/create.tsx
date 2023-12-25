@@ -1,11 +1,9 @@
-import { Edit, SimpleForm, TextInput } from "react-admin";
+import { Create, Edit, SimpleForm, TextInput } from "react-admin";
 import { Title } from "./title";
 
-
-export const UserEdit = () => (
-  <Edit title={<Title />}>
+export const UserCreate = () => (
+  <Create title={<Title />}>
     <SimpleForm>
-      <TextInput source="id" />
       <TextInput source="name" />
       <TextInput source="username" />
       <TextInput source="email" />
@@ -14,5 +12,5 @@ export const UserEdit = () => (
       <TextInput source="website" />
       <TextInput source="company.name" />
     </SimpleForm>
-  </Edit>
+  </Create>
 );
