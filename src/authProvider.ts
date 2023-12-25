@@ -1,44 +1,21 @@
-import { AuthProvider, HttpError } from "react-admin";
-import data from "./users.json";
+import {
+  FirebaseAuthProvider,
+  FirebaseDataProvider,
+} from "react-admin-firebase";
 
-/**
- * This authProvider is only for test purposes. Don't use it in production.
- */
-export const authProvider: AuthProvider = {
-  login: ({ username, password }) => {
-    const user = data.users.find(
-      (u) => u.username === username && u.password === password
-    );
-
-    if (user) {
-      // eslint-disable-next-line no-unused-vars
-      let { password, ...userToPersist } = user;
-      localStorage.setItem("user", JSON.stringify(userToPersist));
-      return Promise.resolve();
-    }
-
-    return Promise.reject(
-      new HttpError("Unauthorized", 401, {
-        message: "Invalid username or password",
-      })
-    );
-  },
-  logout: () => {
-    localStorage.removeItem("user");
-    return Promise.resolve();
-  },
-  checkError: () => Promise.resolve(),
-  checkAuth: () =>
-    localStorage.getItem("user") ? Promise.resolve() : Promise.reject(),
-  getPermissions: () => {
-    return Promise.resolve(undefined);
-  },
-  getIdentity: () => {
-    const persistedUser = localStorage.getItem("user");
-    const user = persistedUser ? JSON.parse(persistedUser) : null;
-
-    return Promise.resolve(user);
-  },
+const config = {
+  apiKey: "AIzaSyBusOrJRfv_eH0S0tn67Aeh7Nz6PW9en5c",
+  authDomain: "crescent-ims.firebaseapp.com",
+  projectId: "crescent-ims",
+  storageBucket: "crescent-ims.appspot.com",
+  messagingSenderId: "607651373773",
+  appId: "1:607651373773:web:4cd7a1c8952722254ebf84",
+  measurementId: "G-438HGNXKZE",
 };
 
-export default authProvider;
+const options = {
+  logging: false,
+};
+
+const dataProvider = FirebaseDataProvider(config, options);
+//export const authProvider = FirebaseAuthProvider(config, options);
