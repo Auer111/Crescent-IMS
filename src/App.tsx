@@ -1,7 +1,14 @@
-import { Admin, Resource } from "react-admin";
-import { dataProvider } from "./dataProvider";
+import {
+  Admin,
+  EditGuesser,
+  ListGuesser,
+  Resource,
+  ShowGuesser,
+} from "react-admin";
 import { Box, CircularProgress } from "@mui/material";
 import { UserList, UserShow, UserEdit, UserCreate } from "./user";
+import GroupIcon from "@mui/icons-material/Group";
+import OtherHousesIcon from "@mui/icons-material/OtherHouses";
 import {
   GoogleAuthProvider,
   getAuth,
@@ -11,6 +18,8 @@ import {
 import { initializeApp } from "firebase/app";
 import { useEffect, useState } from "react";
 import SignIn, { GoogleSignIn } from "./google/signIn";
+import { FirebaseDataProvider } from "react-admin-firebase";
+import { AreaList } from "./area/list";
 
 const config = {
   apiKey: "AIzaSyBusOrJRfv_eH0S0tn67Aeh7Nz6PW9en5c",
@@ -25,6 +34,7 @@ const config = {
 const app = initializeApp(config);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
+const dataProvider = FirebaseDataProvider(config, {});
 
 export const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -80,12 +90,14 @@ export const App = () => {
   return (
     <Admin dataProvider={dataProvider}>
       <Resource
+        icon={GroupIcon}
         name="users"
         show={UserShow}
         list={UserList}
         edit={UserEdit}
         create={UserCreate}
       />
+      <Resource icon={OtherHousesIcon} name="area" list={AreaList} />
     </Admin>
   );
 };
