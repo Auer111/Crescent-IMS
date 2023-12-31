@@ -1,5 +1,6 @@
 import {
   Admin,
+  CustomRoutes,
   EditGuesser,
   ListGuesser,
   Resource,
@@ -20,6 +21,9 @@ import { useEffect, useState } from "react";
 import SignIn, { GoogleSignIn } from "./google/signIn";
 import { FirebaseDataProvider } from "react-admin-firebase";
 import { AreaList } from "./area/list";
+import { AreaCreate } from "./area/create";
+import { Dashboard } from "./dashboard";
+import { Route } from "react-router-dom";
 
 const config = {
   apiKey: "AIzaSyBusOrJRfv_eH0S0tn67Aeh7Nz6PW9en5c",
@@ -88,7 +92,16 @@ export const App = () => {
   }
 
   return (
-    <Admin dataProvider={dataProvider}>
+    <Admin dataProvider={dataProvider} dashboard={Dashboard}>
+      <CustomRoutes>
+        <Route path="/dashboard" element={<Dashboard />} />
+      </CustomRoutes>
+      <Resource
+        icon={OtherHousesIcon}
+        name="area"
+        list={AreaList}
+        create={AreaCreate}
+      />
       <Resource
         icon={GroupIcon}
         name="users"
@@ -97,7 +110,6 @@ export const App = () => {
         edit={UserEdit}
         create={UserCreate}
       />
-      <Resource icon={OtherHousesIcon} name="area" list={AreaList} />
     </Admin>
   );
 };

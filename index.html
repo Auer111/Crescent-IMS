@@ -29,6 +29,7 @@
         margin: 0;
         padding: 0;
         font-family: sans-serif;
+        overflow-x: hidden;
       }
 
       .loader-container {
@@ -98,6 +99,10 @@
         animation: load2 2s infinite ease;
       }
 
+      .building {
+        opacity: 0;
+      }
+
       @-webkit-keyframes load2 {
         0% {
           -webkit-transform: rotate(0deg);
@@ -125,6 +130,7 @@
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
       rel="stylesheet"
     />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
   </head>
 
   <body>
