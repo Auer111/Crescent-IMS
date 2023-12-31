@@ -20,8 +20,12 @@ import { initializeApp } from "firebase/app";
 import { useEffect, useState } from "react";
 import SignIn, { GoogleSignIn } from "./google/signIn";
 import { FirebaseDataProvider } from "react-admin-firebase";
-import { AreaList } from "./area/list";
-import { AreaCreate } from "./area/create";
+import {
+  LocationCreate,
+  LocationList,
+  LocationEdit,
+  LocationShow,
+} from "./location";
 import { Dashboard } from "./dashboard";
 import { Route } from "react-router-dom";
 
@@ -98,9 +102,9 @@ export const App = () => {
       </CustomRoutes>
       <Resource
         icon={OtherHousesIcon}
-        name="area"
-        list={AreaList}
-        create={AreaCreate}
+        name="locations"
+        list={LocationList}
+        create={LocationCreate}
       />
       <Resource
         icon={GroupIcon}

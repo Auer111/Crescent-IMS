@@ -2,7 +2,7 @@ import { Edit, SimpleForm, TextInput } from "react-admin";
 import { Title } from "./title";
 
 
-export const UserEdit = () => (
+export const LocationEdit = () => (
   <Edit title={<Title />}>
     <SimpleForm>
       <TextInput source="id" />

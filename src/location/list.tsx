@@ -8,8 +8,9 @@ import {
 import { Grid, useTheme } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import { useState } from "react";
+import { buildNestedStructure } from "../utils/data";
 
-export const AreaList = () => {
+export const LocationList = () => {
   const theme = useTheme();
   const [path, setPath] = useState([""]);
   const [pathName, setPathName] = useState(["Camp"]);
@@ -25,38 +26,12 @@ export const AreaList = () => {
         render={({ data, isLoading }) =>
           !isLoading && (
             <>
-              <Breadcrumbs
-                sx={{ p: 2 }}
-                separator=" / "
-                aria-label="breadcrumb"
-              >
-                {pathName.map((segment, index) => (
-                  <Typography
-                    key={index}
-                    color="textPrimary"
-                    onClick={() => handleBreadcrumbClick(index)} // Add click handler
-                    style={{
-                      color:
-                        index !== pathName.length - 1
-                          ? theme.palette.primary.main
-                          : "inherit",
-                      textDecoration: "underline",
-                      cursor: "pointer",
-                    }}
-                  >
-                    {segment}
-                  </Typography>
-                ))}
-              </Breadcrumbs>
               <Grid container spacing={2} sx={{ px: 2 }}>
-                {data
-                  .filter(
-                    (i) =>
-                      i.parent ===
-                      (path.length > 0 ? path[path.length - 1] : "")
+                {buildNestedStructure(data, "id", "parent_id")[0]
+                  ["children"].sort((a: any, b: any) =>
+                    a.name.localeCompare(b.name)
                   )
-                  .sort((a, b) => a.name.localeCompare(b.name))
-                  .map((i, index) => (
+                  .map((i: any, index: any) => (
                     <Grid item xs={12} md={4} key={index}>
                       <Paper
                         onClick={() => {
@@ -71,11 +46,6 @@ export const AreaList = () => {
                     </Grid>
                   ))}
               </Grid>
-              <CreateButton
-                resource="area"
-                state={{ record: { parent: path[path.length - 1] } }}
-                label="Create"
-              />
             </>
           )
         }

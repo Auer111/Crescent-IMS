@@ -1,7 +1,7 @@
 import { EmailField, Show, SimpleShowLayout, TextField } from "react-admin";
 import { Title } from "./title";
 
-export const UserShow = () => (
+export const LocationShow = () => (
   <Show title={<Title />}>
     <SimpleShowLayout>
       <TextField source="id" />
