@@ -1,28 +1,29 @@
+import { useEffect, useState } from "react";
+import { BrowserRouter, Route } from "react-router-dom";
 import {
   Admin,
   AdminContext,
   CustomRoutes,
-  EditGuesser,
-  ListGuesser,
-  Login,
   Resource,
+  ListGuesser,
   ShowGuesser,
+  EditGuesser,
 } from "react-admin";
+import { FirebaseDataProvider } from "react-admin-firebase";
 import { Box, CircularProgress } from "@mui/material";
-import { UserList, UserShow, UserEdit, UserCreate } from "./user";
-import GroupIcon from "@mui/icons-material/Group";
-import OtherHousesIcon from "@mui/icons-material/OtherHouses";
-import LocalActivityIcon from "@mui/icons-material/LocalActivity";
+import { initializeApp } from "firebase/app";
+import { GoogleSignIn } from "./login/signIn";
 import {
   GoogleAuthProvider,
   getAuth,
   onAuthStateChanged,
   signInWithRedirect,
 } from "firebase/auth";
-import { initializeApp } from "firebase/app";
-import { useEffect, useState } from "react";
-import SignIn, { GoogleSignIn } from "./login/signIn";
-import { FirebaseDataProvider } from "react-admin-firebase";
+import { UserList, UserShow, UserEdit, UserCreate } from "./user";
+import GroupIcon from "@mui/icons-material/Group";
+import OtherHousesIcon from "@mui/icons-material/OtherHouses";
+import LocalActivityIcon from "@mui/icons-material/LocalActivity";
+import coverImage from "./img/cover.png";
 import {
   LocationCreate,
   LocationList,
@@ -30,12 +31,8 @@ import {
   LocationShow,
 } from "./location";
 import { Dashboard } from "./dashboard";
-import { BrowserRouter, Route, Router, Routes } from "react-router-dom";
-import coverImage from "./img/cover.png";
 import { ProgramView } from "./programs/view";
-import { ProgramList } from "./programs/admin/list";
-import { ProgramEdit } from "./programs/admin/edit";
-import { ProgramCreate } from "./programs/admin/create";
+import { ProgramList, ProgramEdit, ProgramCreate } from "./programs/admin";
 
 const config = {
   apiKey: "AIzaSyBusOrJRfv_eH0S0tn67Aeh7Nz6PW9en5c",
