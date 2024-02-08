@@ -1,8 +1,10 @@
 import {
   Admin,
+  AdminContext,
   CustomRoutes,
   EditGuesser,
   ListGuesser,
+  Login,
   Resource,
   ShowGuesser,
 } from "react-admin";
@@ -10,6 +12,7 @@ import { Box, CircularProgress } from "@mui/material";
 import { UserList, UserShow, UserEdit, UserCreate } from "./user";
 import GroupIcon from "@mui/icons-material/Group";
 import OtherHousesIcon from "@mui/icons-material/OtherHouses";
+import LocalActivityIcon from "@mui/icons-material/LocalActivity";
 import {
   GoogleAuthProvider,
   getAuth,
@@ -18,7 +21,7 @@ import {
 } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import { useEffect, useState } from "react";
-import SignIn, { GoogleSignIn } from "./google/signIn";
+import SignIn, { GoogleSignIn } from "./login/signIn";
 import { FirebaseDataProvider } from "react-admin-firebase";
 import {
   LocationCreate,
@@ -27,7 +30,12 @@ import {
   LocationShow,
 } from "./location";
 import { Dashboard } from "./dashboard";
-import { Route } from "react-router-dom";
+import { BrowserRouter, Route, Router, Routes } from "react-router-dom";
+import coverImage from "./img/cover.png";
+import { ProgramView } from "./programs/view";
+import { ProgramList } from "./programs/admin/list";
+import { ProgramEdit } from "./programs/admin/edit";
+import { ProgramCreate } from "./programs/admin/create";
 
 const config = {
   apiKey: "AIzaSyBusOrJRfv_eH0S0tn67Aeh7Nz6PW9en5c",
@@ -46,6 +54,8 @@ const dataProvider = FirebaseDataProvider(config, {});
 
 export const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [token, setToken] = useState("");
   const [loading, setLoading] = useState(true); // Added loading state
   const auth = getAuth();
 
@@ -53,6 +63,8 @@ export const App = () => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         setIsLoggedIn(true);
+        setToken(await user.getIdToken());
+        setIsAdmin(user?.email?.includes("@crescentlake.camp") ?? false);
       } else {
         setIsLoggedIn(false);
       }
@@ -69,8 +81,73 @@ export const App = () => {
     signInWithRedirect(auth, provider);
   };
 
-  if (loading) {
-    return (
+  const clientApp = () => (
+    <>
+      <AdminContext dataProvider={dataProvider}>
+        <Resource name="programs" list={ProgramView} />
+      </AdminContext>
+    </>
+  );
+
+  const adminApp = () => (
+    <>
+      <Admin dataProvider={dataProvider} dashboard={Dashboard}>
+        <CustomRoutes>
+          <Route path="/dashboard" element={<Dashboard />} />
+        </CustomRoutes>
+        <Resource
+          name="programs"
+          icon={LocalActivityIcon}
+          list={ProgramList}
+          show={ShowGuesser}
+          edit={ProgramEdit}
+          create={ProgramCreate}
+        />
+        <Resource
+          icon={OtherHousesIcon}
+          name="locations"
+          list={LocationList}
+          create={LocationCreate}
+        />
+        <Resource
+          icon={GroupIcon}
+          name="users"
+          show={UserShow}
+          list={UserList}
+          edit={UserEdit}
+          create={UserCreate}
+        />
+      </Admin>
+    </>
+  );
+
+  const login = () => (
+    <>
+      <div
+        style={{
+          backgroundImage: `url(${coverImage})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          height="100vh"
+        >
+          <GoogleSignIn onClick={handleLoginClick}></GoogleSignIn>
+        </Box>
+      </div>
+    </>
+  );
+
+  const progress = () => (
+    <>
       <Box
         display="flex"
         justifyContent="center"
@@ -79,41 +156,15 @@ export const App = () => {
       >
         <CircularProgress />
       </Box>
-    ); // Show spinner while loading
-  }
-
-  if (!isLoggedIn) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="100vh" // Adjust as needed
-      >
-        <GoogleSignIn onClick={handleLoginClick}></GoogleSignIn>
-      </Box>
-    );
-  }
-
-  return (
-    <Admin dataProvider={dataProvider} dashboard={Dashboard}>
-      <CustomRoutes>
-        <Route path="/dashboard" element={<Dashboard />} />
-      </CustomRoutes>
-      <Resource
-        icon={OtherHousesIcon}
-        name="locations"
-        list={LocationList}
-        create={LocationCreate}
-      />
-      <Resource
-        icon={GroupIcon}
-        name="users"
-        show={UserShow}
-        list={UserList}
-        edit={UserEdit}
-        create={UserCreate}
-      />
-    </Admin>
+    </>
   );
+
+  if (loading) {
+    return progress(); // Show spinner while loading
+  }
+  if (!isLoggedIn) {
+    return login();
+  }
+
+  return <>{isAdmin ? adminApp() : clientApp()}</>;
 };
