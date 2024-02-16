@@ -11,7 +11,12 @@ import {
 export const ProgramCreate = () => (
   <Create>
     <SimpleForm>
-      <FileInput source="image" />
+      <FileInput
+        source="photos"
+        multiple={true}
+        defaultValue={[]}
+        sx={{ display: "none" }}
+      />
       <TextInput source="name" />
       <TextInput source="description" />
     </SimpleForm>

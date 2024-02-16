@@ -17,10 +17,12 @@ import {
   UpdateButton,
   useRecordContext,
 } from "react-admin";
+import { ImageUploader } from "../../utils/ImageUploader";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import { useState } from "react";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 
-export const ProgramEdit = () => {
+export const ProgramUpload = () => {
   const PostEditActions = () => (
     <TopToolbar>
       <EditButton
@@ -28,22 +30,15 @@ export const ProgramEdit = () => {
         to={`/programs/${useRecordContext()?.id}/invite`}
         icon={<PersonAddIcon />}
       ></EditButton>
-      <EditButton
-        label="Upload"
-        to={`/programs/${useRecordContext()?.id}/upload`}
-        icon={<AddPhotoAlternateIcon />}
-      />
+      <EditButton label="Edit" />
       <ShowButton></ShowButton>
     </TopToolbar>
   );
 
   return (
-    <Edit actions={<PostEditActions />} redirect="show" title="Edit">
+    <Edit actions={<PostEditActions />} redirect="show" title={"Upload"}>
       <SimpleForm>
-        <TextInput source="id" disabled={true} />
-
-        <TextInput source="name" />
-        <TextInput source="description" />
+        <ImageUploader></ImageUploader>
       </SimpleForm>
     </Edit>
   );

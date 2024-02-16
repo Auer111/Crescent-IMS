@@ -1,7 +1,7 @@
 import { useMediaQuery, Theme } from "@mui/material";
 import { List, SimpleList, Datagrid, TextField, EmailField } from "react-admin";
 
-export const UserList = () => {
+export const ProfileList = () => {
   const isSmall = useMediaQuery<Theme>((theme) => theme.breakpoints.down("sm"));
   return (
     <List>
@@ -14,7 +14,6 @@ export const UserList = () => {
       ) : (
         <Datagrid rowClick="show">
           <TextField source="name" />
-          <TextField source="username" />
           <EmailField source="email" />
         </Datagrid>
       )}

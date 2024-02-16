@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BrowserRouter, Route } from "react-router-dom";
+import { BrowserRouter, Route, redirect } from "react-router-dom";
 import {
   Admin,
   AdminContext,
@@ -8,6 +8,8 @@ import {
   ListGuesser,
   ShowGuesser,
   EditGuesser,
+  SaveButton,
+  ResourceContextProvider,
 } from "react-admin";
 import { FirebaseDataProvider } from "react-admin-firebase";
 import { Box, CircularProgress } from "@mui/material";
@@ -15,15 +17,21 @@ import { initializeApp } from "firebase/app";
 import { GoogleSignIn } from "./login/signIn";
 import {
   GoogleAuthProvider,
+  User,
   getAuth,
   onAuthStateChanged,
   signInWithRedirect,
 } from "firebase/auth";
-import { UserList, UserShow, UserEdit, UserCreate } from "./user";
+import {
+  ProfileList,
+  ProfileShow,
+  ProfileEdit,
+  ProfileCreate,
+} from "./profile";
+import { Profile } from "./profile/profile";
 import GroupIcon from "@mui/icons-material/Group";
 import OtherHousesIcon from "@mui/icons-material/OtherHouses";
 import LocalActivityIcon from "@mui/icons-material/LocalActivity";
-import coverImage from "./img/cover.png";
 import {
   LocationCreate,
   LocationList,
@@ -32,7 +40,19 @@ import {
 } from "./location";
 import { Dashboard } from "./dashboard";
 import { ProgramView } from "./programs/view";
-import { ProgramList, ProgramEdit, ProgramCreate } from "./programs/admin";
+import {
+  ProgramList,
+  ProgramEdit,
+  ProgramCreate,
+  ProgramUpload,
+  ProgramInvite,
+} from "./programs/admin";
+import { ResourceProgram } from "./programs/admin/resource";
+
+import clbcLogo from "./img/clbc.png";
+import coverImage from "./img/cover.webp";
+import { ProgramShow } from "./programs/admin/show";
+import { ProgramInvited } from "./programs/invited";
 
 const config = {
   apiKey: "AIzaSyBusOrJRfv_eH0S0tn67Aeh7Nz6PW9en5c",
@@ -54,6 +74,7 @@ export const App = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [token, setToken] = useState("");
   const [loading, setLoading] = useState(true); // Added loading state
+  const [profile, setProfile] = useState<Profile | null>(null);
   const auth = getAuth();
 
   useEffect(() => {
@@ -62,11 +83,33 @@ export const App = () => {
         setIsLoggedIn(true);
         setToken(await user.getIdToken());
         setIsAdmin(user?.email?.includes("@crescentlake.camp") ?? false);
+        getProfile(user);
       } else {
         setIsLoggedIn(false);
       }
+
       setLoading(false); // Set loading to false once auth state is determined
     });
+
+    const getProfile = (user: User) => {
+      dataProvider.getOne("profiles", { id: user.uid }).then((response) => {
+        if (response.data?.createdate !== undefined) {
+          setProfile(response.data);
+        } else {
+          createProfile(user);
+        }
+      });
+    };
+
+    const createProfile = (user: User) => {
+      if (profile === null) {
+        dataProvider
+          .create("profiles", {
+            data: { id: user.uid, email: user.email, name: user.displayName },
+          })
+          .then((response) => setProfile(response.data));
+      }
+    };
 
     return () => {
       unsubscribe();
@@ -81,7 +124,7 @@ export const App = () => {
   const clientApp = () => (
     <>
       <AdminContext dataProvider={dataProvider}>
-        <Resource name="programs" list={ProgramView} />
+        <div>{profile?.email}</div>
       </AdminContext>
     </>
   );
@@ -92,13 +135,15 @@ export const App = () => {
         <CustomRoutes>
           <Route path="/dashboard" element={<Dashboard />} />
         </CustomRoutes>
-        <Resource
+        <ResourceProgram
           name="programs"
           icon={LocalActivityIcon}
           list={ProgramList}
-          show={ShowGuesser}
+          show={ProgramShow}
           edit={ProgramEdit}
           create={ProgramCreate}
+          upload={ProgramUpload}
+          invite={ProgramInvite}
         />
         <Resource
           icon={OtherHousesIcon}
@@ -108,11 +153,10 @@ export const App = () => {
         />
         <Resource
           icon={GroupIcon}
-          name="users"
-          show={UserShow}
-          list={UserList}
-          edit={UserEdit}
-          create={UserCreate}
+          name="profiles"
+          show={ProfileShow}
+          list={ProfileList}
+          edit={ProfileEdit}
         />
       </Admin>
     </>
@@ -124,7 +168,7 @@ export const App = () => {
         style={{
           backgroundImage: `url(${coverImage})`,
           backgroundSize: "cover",
-          backgroundPosition: "center",
+          backgroundPosition: "right",
           height: "100vh",
           display: "flex",
           justifyContent: "center",
@@ -132,11 +176,19 @@ export const App = () => {
         }}
       >
         <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
+          display="grid"
           height="100vh"
+          sx={{ placeContent: "space-between", justifyItems: "center" }}
         >
+          <img
+            src={clbcLogo}
+            alt="Crescent Lake Bible Camp Logo"
+            style={{
+              width: "min(100%,20em)",
+              marginInline: "auto",
+              paddingTop: "5vh",
+            }}
+          ></img>
           <GoogleSignIn onClick={handleLoginClick}></GoogleSignIn>
         </Box>
       </div>

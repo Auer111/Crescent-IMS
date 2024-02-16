@@ -12,7 +12,7 @@
     default-src *;
     script-src * 'unsafe-inline' 'unsafe-eval';
     style-src * 'unsafe-inline';
-    img-src * data:;
+    img-src * data: blob:;
     frame-src *;
     connect-src *;
     font-src *;
@@ -101,6 +101,12 @@
 
       .building {
         opacity: 0;
+      }
+
+      .small,
+      .small > img {
+        height: 2em !important;
+        width: 2em !important;
       }
 
       @-webkit-keyframes load2 {
