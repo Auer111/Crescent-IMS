@@ -1,7 +1,13 @@
 import React, { useState } from "react";
 import { ImageInput, ImageField } from "react-admin";
 
-export const ImageUploader = () => {
+interface ImageUploaderProps {
+  source: string;
+  multiple: boolean;
+}
+
+
+export const ImageUploader: React.FC<ImageUploaderProps> = ({source, multiple}) => {
   const [previews, setPreviews] = useState<
     Array<{ src: string; title: string }>
   >([]);
@@ -19,22 +25,24 @@ export const ImageUploader = () => {
   return (
     <div>
       <ImageInput
-        source="photos"
-        multiple={true}
+        source={source}
+        multiple={multiple}
         options={{
           onDropAccepted: handleFilesSelected,
         }}
       />
       {/* Render image previews */}
-      {previews.map((preview, index) => (
-        <ImageField
-          key={index}
-          record={preview}
-          source="src"
-          title={preview.title}
-          className="small"
-        />
-      ))}
+      <div style={{ display: "flex" }}>
+        {previews.map((preview, index) => (
+          <ImageField
+            key={index}
+            record={preview}
+            source="src"
+            title={preview.title}
+            className="small"
+          />
+        ))}
+      </div>
     </div>
   );
 };

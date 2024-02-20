@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BrowserRouter, Route, redirect } from "react-router-dom";
+import { BrowserRouter, Route, Routes, redirect } from "react-router-dom";
 import {
   Admin,
   AdminContext,
@@ -39,20 +39,22 @@ import {
   LocationShow,
 } from "./location";
 import { Dashboard } from "./dashboard";
-import { ProgramView } from "./programs/view";
 import {
+  ProgramShow,
   ProgramList,
   ProgramEdit,
   ProgramCreate,
   ProgramUpload,
   ProgramInvite,
-} from "./programs/admin";
-import { ResourceProgram } from "./programs/admin/resource";
+  ProgramInvited,
+  ProgramCollection,
+  ResourceProgram,
+  ProgramGallery,
+} from "./programs";
 
 import clbcLogo from "./img/clbc.png";
 import coverImage from "./img/cover.webp";
-import { ProgramShow } from "./programs/admin/show";
-import { ProgramInvited } from "./programs/invited";
+import { Nav } from "./nav";
 
 const config = {
   apiKey: "AIzaSyBusOrJRfv_eH0S0tn67Aeh7Nz6PW9en5c",
@@ -77,6 +79,11 @@ export const App = () => {
   const [profile, setProfile] = useState<Profile | null>(null);
   const auth = getAuth();
 
+  const setProfileFromUser = (profile: any) => {
+    setProfile(profile);
+    setLoading(false);
+  };
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -86,15 +93,17 @@ export const App = () => {
         getProfile(user);
       } else {
         setIsLoggedIn(false);
+        setLoading(false);
       }
 
-      setLoading(false); // Set loading to false once auth state is determined
+      // Set loading to false once auth state is determined
     });
 
     const getProfile = (user: User) => {
       dataProvider.getOne("profiles", { id: user.uid }).then((response) => {
-        if (response.data?.createdate !== undefined) {
-          setProfile(response.data);
+        if (response?.data?.email.includes("@")) {
+          setProfileFromUser(response.data);
+          setLoading(false);
         } else {
           createProfile(user);
         }
@@ -107,7 +116,7 @@ export const App = () => {
           .create("profiles", {
             data: { id: user.uid, email: user.email, name: user.displayName },
           })
-          .then((response) => setProfile(response.data));
+          .then((response) => setProfileFromUser(response.data));
       }
     };
 
@@ -124,7 +133,20 @@ export const App = () => {
   const clientApp = () => (
     <>
       <AdminContext dataProvider={dataProvider}>
-        <div>{profile?.email}</div>
+        <ResourceContextProvider value="programs">
+          <Routes>
+            <Route
+              path="programs/:id/invite"
+              element={<ProgramInvited profile={profile!} />}
+            />
+            <Route path="programs/:id" element={<ProgramGallery />} />
+            <Route
+              path="programs/*"
+              element={<ProgramCollection profile={profile!} />}
+            />
+          </Routes>
+        </ResourceContextProvider>
+        <Nav />
       </AdminContext>
     </>
   );
@@ -166,9 +188,6 @@ export const App = () => {
     <>
       <div
         style={{
-          backgroundImage: `url(${coverImage})`,
-          backgroundSize: "cover",
-          backgroundPosition: "right",
           height: "100vh",
           display: "flex",
           justifyContent: "center",

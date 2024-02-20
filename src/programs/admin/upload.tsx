@@ -38,7 +38,7 @@ export const ProgramUpload = () => {
   return (
     <Edit actions={<PostEditActions />} redirect="show" title={"Upload"}>
       <SimpleForm>
-        <ImageUploader></ImageUploader>
+        <ImageUploader source="photos" multiple={true}></ImageUploader>
       </SimpleForm>
     </Edit>
   );

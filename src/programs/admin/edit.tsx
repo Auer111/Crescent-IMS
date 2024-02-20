@@ -19,6 +19,7 @@ import {
 } from "react-admin";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import { ImageUploader } from "../../utils/ImageUploader";
 
 export const ProgramEdit = () => {
   const PostEditActions = () => (
@@ -41,7 +42,7 @@ export const ProgramEdit = () => {
     <Edit actions={<PostEditActions />} redirect="show" title="Edit">
       <SimpleForm>
         <TextInput source="id" disabled={true} />
-
+        <ImageUploader source="image" multiple={false}></ImageUploader>
         <TextInput source="name" />
         <TextInput source="description" />
       </SimpleForm>

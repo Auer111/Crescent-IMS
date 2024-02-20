@@ -45,6 +45,7 @@ export const ProgramShow = () => {
           </SingleFieldList>
         </ArrayField>
         <TextField source="id" />
+        <ImageField source="image.src" />
         <TextField source="name" />
         <DateField source="lastupdate" />
         <TextField source="updatedby" />
