@@ -52,7 +52,8 @@ import {
   ProgramGallery,
 } from "./programs";
 
-import clbcLogo from "./img/clbc.png";
+import clbcLogo from "./img/clbc_text.svg";
+import clbcIcon from "./img/clbc_icon.svg";
 import coverImage from "./img/cover.webp";
 import { Nav } from "./nav";
 
@@ -188,6 +189,8 @@ export const App = () => {
     <>
       <div
         style={{
+          backgroundSize: "cover",
+          backgroundPosition: "right",
           height: "100vh",
           display: "flex",
           justifyContent: "center",
@@ -197,15 +200,24 @@ export const App = () => {
         <Box
           display="grid"
           height="100vh"
-          sx={{ placeContent: "space-between", justifyItems: "center" }}
+          sx={{ placeContent: "center", justifyItems: "center" }}
         >
           <img
+            src={clbcIcon}
+            alt="Crescent Lake Bible Camp Icon"
+            style={{
+              width: "min(100%,5em)",
+              marginInline: "auto",
+              paddingBottom: "1em",
+            }}
+          ></img>
+          <img
             src={clbcLogo}
-            alt="Crescent Lake Bible Camp Logo"
+            alt="Crescent Lake Bible Camp Title Text"
             style={{
               width: "min(100%,20em)",
               marginInline: "auto",
-              paddingTop: "5vh",
+              paddingBottom: "5em",
             }}
           ></img>
           <GoogleSignIn onClick={handleLoginClick}></GoogleSignIn>
