@@ -4,10 +4,14 @@ import { ImageInput, ImageField } from "react-admin";
 interface ImageUploaderProps {
   source: string;
   multiple: boolean;
+  setFileCount: (count: number) => void;
 }
 
-
-export const ImageUploader: React.FC<ImageUploaderProps> = ({source, multiple}) => {
+export const ImageUploader: React.FC<ImageUploaderProps> = ({
+  source,
+  multiple,
+  setFileCount,
+}) => {
   const [previews, setPreviews] = useState<
     Array<{ src: string; title: string }>
   >([]);
@@ -19,6 +23,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({source, multiple}) 
       title: file.name, // Use filename as title
     }));
     setPreviews(newPreviews);
+    setFileCount(files.length);
     console.log(files); // Log the selected files
   };
 
