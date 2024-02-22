@@ -103,10 +103,17 @@
         opacity: 0;
       }
 
-      .small,
-      .small > img {
-        height: 2em !important;
-        width: 2em !important;
+      .complete {
+        font-size: 100px !important;
+        translate: 0 -100px;
+        color: green;
+      }
+      .ImageField,
+      .ImageField > img {
+        margin: 0 !important;
+        width: 100px !important;
+        height: 100px !important;
+        object-fit: cover;
       }
 
       @-webkit-keyframes load2 {

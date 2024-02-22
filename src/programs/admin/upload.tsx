@@ -38,29 +38,29 @@ export const ProgramUpload = () => {
   const redirect = useRedirect();
   const dataProvider = useDataProvider();
 
-  const getUploadStatus = (count: number) => {
-    dataProvider.getOne("programs", { id: id }).then((result) => {
-      setTimeout(() => {
-        getProgramData(result.data.photos.length + count);
-      }, 3000);
-    });
-  };
+  // const getUploadStatus = (count: number) => {
+  //   dataProvider.getOne("programs", { id: id }).then((result) => {
+  //     setTimeout(() => {
+  //       getProgramData(result.data.photos.length + count);
+  //     }, 3000);
+  //   });
+  // };
 
-  const getProgramData = (targetCount: number) => {
-    dataProvider.getOne("programs", { id: id }).then((result) => {
-      const currentUploads = result?.data?.photos?.length ?? 0;
-      if (currentUploads < targetCount) {
-        setTimeout(() => {
-          getProgramData(targetCount);
-        }, 3000);
-      } else {
-        setIsUploading(false);
-        redirect(`/programs/${id}/show`);
-      }
-      console.log("targetCount", targetCount);
-      console.log(" currentUploads:", result.data.photos.length);
-    });
-  };
+  // const getProgramData = (targetCount: number) => {
+  //   dataProvider.getOne("programs", { id: id }).then((result) => {
+  //     const currentUploads = result?.data?.photos?.length ?? 0;
+  //     if (currentUploads < targetCount) {
+  //       setTimeout(() => {
+  //         getProgramData(targetCount);
+  //       }, 3000);
+  //     } else {
+  //       setIsUploading(false);
+  //       redirect(`/programs/${id}/show`);
+  //     }
+  //     console.log("targetCount", targetCount);
+  //     console.log(" currentUploads:", result.data.photos.length);
+  //   });
+  // };
 
   const PostEditActions = () => (
     <TopToolbar>
@@ -81,10 +81,9 @@ export const ProgramUpload = () => {
           toolbar={
             <Toolbar>
               <SaveButton
-                onClick={(data) => {
-                  getUploadStatus(fileCount);
-                  setIsUploading(true);
-                }}
+                // onClick={(data) => {
+                //   setIsUploading(true);
+                // }}
                 label="Upload"
               />
             </Toolbar>
@@ -93,23 +92,10 @@ export const ProgramUpload = () => {
           <ImageUploader
             source="photos"
             multiple={true}
-            setFileCount={setFileCount}
+            setFileCount={()=>{}}
           ></ImageUploader>
         </SimpleForm>
       </Edit>
-      {uploading && (
-        <Backdrop
-          sx={{
-            flexDirection: "column",
-            color: "#fff",
-            zIndex: (theme) => theme.zIndex.drawer + 1,
-          }}
-          open={true} // Assuming you want it to be always open
-        >
-          <CircularProgress color="inherit" />
-          <Typography padding={"1rem"}>Uploading</Typography>
-        </Backdrop>
-      )}
     </>
   );
 };

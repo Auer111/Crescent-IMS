@@ -42,11 +42,7 @@ export const ProgramEdit = () => {
     <Edit actions={<PostEditActions />} redirect="show" title="Edit">
       <SimpleForm>
         <TextInput source="id" disabled={true} />
-        <ImageUploader
-          source="image"
-          multiple={false}
-          setFileCount={() => {}}
-        ></ImageUploader>
+        <ImageInput source={"image"} multiple={false} />
         <TextInput source="name" />
         <TextInput source="description" />
       </SimpleForm>

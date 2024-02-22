@@ -56,6 +56,7 @@ import clbcLogo from "./img/clbc_text.svg";
 import clbcIcon from "./img/clbc_icon.svg";
 import coverImage from "./img/cover.webp";
 import { Nav } from "./utils/nav";
+import EventMonitor from "./utils/EventMoniter";
 
 const config = {
   apiKey: "AIzaSyBusOrJRfv_eH0S0tn67Aeh7Nz6PW9en5c",
